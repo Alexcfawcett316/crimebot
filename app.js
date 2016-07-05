@@ -4,6 +4,7 @@ var app = express();
 var port = process.env.PORT || 3001;
 var token = 'EAAHCBI4ojoIBACSZBblneqDKK0miZABfg572lJPmmSSvUwZChPLdpmdF1ZCNJQsqWc49moou4oZBgcrkGjAsVj93yIYYkh4iOlkAET46LX1bB0Kn8sHELMotLahsAZAznpAvWZCnDGo0VOTNSVE3u1IdfaebSfNvGGvPdxL5QNOfgZDZD';
 var request = require("request");
+var geocode = require("./geocoder");
 
 //app.use(bodyParser.urlencoded({extended: true}));
 
@@ -15,6 +16,20 @@ app.get('/webhook', function (req, res) {
   	console.log('not authed');
     res.send('Error, wrong validation token');    
   }
+});
+
+
+app.get('/geo', function (req, res) {
+  try{
+     var result = geocode.geocodeString('stannington');
+     console.log('result.geomotry');
+  }
+  catch(err){
+    //TODO: Handle multiple or no addresses
+  }
+
+  
+
 });
 
 
