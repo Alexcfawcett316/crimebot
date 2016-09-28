@@ -5,19 +5,15 @@ var port = process.env.PORT || 3001;
 var token = 'EAAHCBI4ojoIBACSZBblneqDKK0miZABfg572lJPmmSSvUwZChPLdpmdF1ZCNJQsqWc49moou4oZBgcrkGjAsVj93yIYYkh4iOlkAET46LX1bB0Kn8sHELMotLahsAZAznpAvWZCnDGo0VOTNSVE3u1IdfaebSfNvGGvPdxL5QNOfgZDZD';
 var request = require("request");
 var geocode = require("./geocoder");
+var builder = require('botbuilder');
+var connector = new builder.ConsoleConnector().listen();
+var bot = new builder.UniversalBot(connector);
 
-//app.use(bodyParser.urlencoded({extended: true}));
-
-app.get('/webhook', function (req, res) {
-  if (req.query['hub.verify_token'] === token) {
-  	console.log('authed');
-    res.send(req.query['hub.challenge']);
-  } else {
-  	console.log('not authed');
-    res.send('Error, wrong validation token');    
-  }
+bot.dialog('/api/messages', function (session) {
+    session.send('Hello World');
 });
 
+//app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/geo', function (req, res) {
   try{
@@ -27,9 +23,6 @@ app.get('/geo', function (req, res) {
   catch(err){
     //TODO: Handle multiple or no addresses
   }
-
-  
-
 });
 
 
