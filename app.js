@@ -7,9 +7,9 @@ var request = require("request");
 var geocode = require("./geocoder");
 var builder = require('botbuilder');
 
-var connector = new builder.ChatConnector({
-    appId: process.env.MICROSOFT_APP_ID,
-    appPassword: process.env.MICROSOFT_APP_PASSWORD
+  var connector = new builder.ChatConnector({
+    appId: "4998908b-6e9d-4e25-a376-67a5546a6c17",
+    appPassword: "vt6PMmXVazm1shYNQJ78hQH"
 });
 var bot = new builder.UniversalBot(connector);
 
