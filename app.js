@@ -14,7 +14,7 @@ var connector = new builder.ChatConnector({
 });
 
 
-app.post('/api/messages', connector.listen);
+app.post('/api/messages', connector.listen());
 
 bot.dialog('/', function (session) {
     session.send('Hello World');
