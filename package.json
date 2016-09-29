@@ -8,7 +8,6 @@
     "request" : "~2.75.0",
     "botbuilder" : "~3.2.3",
     "googlemaps" : "~1.11.1"
-
   },
   "scripts": {
     "start": "node app.js"
