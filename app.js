@@ -30,6 +30,10 @@ app.get('/geo', function (req, res) {
 });
 
 
+app.get('/test', function (req, res) {
+  res.sendStatus(200);   
+});
+
 app.get('/analyse', bodyParser.json(), function (req, res) {
   	request({
     url: 'https://data.police.uk/api/forces',
