@@ -11,9 +11,12 @@ var bot = new builder.UniversalBot(connector);
 var connector = new builder.ChatConnector({
     appId: process.env.MICROSOFT_APP_ID,
     appPassword: process.env.MICROSOFT_APP_PASSWORD
-}).listen();
+});
 
-bot.dialog('/api/messages', function (session) {
+
+app.post('/api/messages', connector.listen);
+
+bot.dialog('/', function (session) {
     session.send('Hello World');
 });
 
