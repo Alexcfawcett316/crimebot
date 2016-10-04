@@ -11,7 +11,7 @@ var publicConfig = {
 var gmAPI = new GoogleMapsAPI(publicConfig);
 
 module.exports = {
-  geocodeString: function (addressString) {
+  geocodeString: function (addressString, callback) {
 
     var geocodeParams = {
       "address":    addressString,
@@ -22,16 +22,7 @@ module.exports = {
     };  
 
     gmAPI.geocode(geocodeParams , function(err, result){
-      console.log(result.results);
-      if(result.results.length == 0){
-        throw 'TooFew'; 
-      }
-      else if(result.results.length > 1){
-        throw 'TooMany';
-      }
-      else{
-        return result.results[0];
-      }
+      callback(result.results);
     });
   },
 };

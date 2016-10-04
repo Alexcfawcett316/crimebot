@@ -7,25 +7,88 @@ var request = require("request");
 var geocode = require("./geocoder");
 var builder = require('botbuilder');
 
-  var connector = new builder.ChatConnector({
+var connector = new builder.ChatConnector({
     appId: "4998908b-6e9d-4e25-a376-67a5546a6c17",
     appPassword: "vt6PMmXVazm1shYNQJ78hQH"
 });
+
 var bot = new builder.UniversalBot(connector);
 
 
 app.post('/api/messages', connector.listen());
 
-bot.dialog('/', function (session) {
-    session.send('Hello World number 2');
-});
+
+bot.dialog('/', [
+    function (session) {
+        session.beginDialog('/getLocation', session.userData.location);
+    },  
+    function (session, results) {
+        session.userData.location = results.response;
+        if(typeof session.userData.location.codedLocation == 'undefined'){
+          session.send('Sorry but I couldn\'t find %(enteredName)s', session.userData.location); 
+        }
+        else{
+          session.send('gotcha');
+        }
+    }
+]);
+
+bot.dialog('/getLocation', [
+   function (session, args, next) {
+        session.dialogData.location = args || {};
+        builder.Prompts.text(session, "Where about in the UK are you?");    
+    },
+    function (session, results, next) {
+        if (results.response) {
+            session.dialogData.location.enteredName = results.response;
+        }
+        geocode.geocodeString(session.dialogData.location.enteredName, function(result){
+          console.log(result.length);
+          if(result.length == 0){
+            //no locations. end
+            session.endDialogWithResult({ response: session.dialogData.location });
+          }
+          else if(result.length == 1){
+             //1 location retured, we're good to go
+             session.dialogData.location.codedLocation = result[0];
+             session.endDialogWithResult({ response: session.dialogData.location });
+          }
+          else if(result.length > 1){
+              //more than 1 location, need to dedupe
+              session.dialogData.location.codedLocations = result;
+              next();
+          }
+          
+        });
+        
+    },
+    function (session) {
+        session.beginDialog('/decideMultiple', session.dialogData.location);
+    },  
+    function (session, results) {
+      //end this part    
+    }
+]);
+
+bot.dialog('/decideMultiple', [
+    function (session, args, next){
+      var choices = [];
+        for (var i = 0; i < args.codedLocations.length; i++) {
+            choices.push(args.codedLocations[i].formatted_address);
+        }
+        builder.Prompts.choice(session, "I've found a few that match those, which one is it?", choices);
+    },  
+    function (session, results) {
+      //end this part    
+    }
+]);
 
 //app.use(bodyParser.urlencoded({extended: true}));
 
 app.get('/geo', function (req, res) {
   try{
-     var result = geocode.geocodeString('stannington');
-     console.log('result.geomotry');
+     //var result = geocode.geocodeString('stannington');
+     //console.log(result.geomotry);
   }
   catch(err){
     //TODO: Handle multiple or no addresses
