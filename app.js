@@ -17,7 +17,7 @@ var bot = new builder.UniversalBot(connector);
 app.post('/api/messages', connector.listen());
 
 bot.dialog('/', function (session) {
-    session.send('Hello World');
+    session.send('Hello World number 2');
 });
 
 //app.use(bodyParser.urlencoded({extended: true}));
